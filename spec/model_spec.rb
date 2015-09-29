@@ -5,11 +5,11 @@ require 'model'
 describe Model do
 
   class AddressModel < Model
-    key(:street1) {'11800 Domain Blvd'}
+    key(:street1) { '11800 Domain Blvd' }
     key(:street2)
-    key(:city)    {'Austin'}
-    key(:state)   {'TX'}
-    key(:zip)     {'78758'}
+    key(:city) { 'Austin' }
+    key(:state) { 'TX' }
+    key(:zip) { '78758' }
   end
 
   it 'should be usable without needing to pass anything to it' do
@@ -51,9 +51,9 @@ describe Model do
 
   it 'should fail if undefined keys are used' do
     address = AddressModel.new
-    expect{address.street}.to raise_error(NoMethodError)
-    expect{AddressModel.new(street: '1101 Fifth St')}.to raise_error(ArgumentError, 'unknown keyword: street')
-    expect{AddressModel.new(a: 'hi', b: 'hello')}.to raise_error(ArgumentError, 'unknown keywords: a, b')
+    expect { address.street }.to raise_error(NoMethodError)
+    expect { AddressModel.new(street: '1101 Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
+    expect { AddressModel.new(a: 'hi', b: 'hello') }.to raise_error(ArgumentError, 'unknown keywords: a, b')
   end
 
   it 'should be able to be updated' do
@@ -64,9 +64,9 @@ describe Model do
 
   require 'faker'
   class UserModel < Model
-    key(:first) {Faker::Name.first_name}
-    key(:last)  {Faker::Name.last_name}
-    key(:email) {"#{first}.#{last}@devmail.company.com"}
+    key(:first) { Faker::Name.first_name }
+    key(:last) { Faker::Name.last_name }
+    key(:email) { "#{first}.#{last}@devmail.company.com" }
   end
 
   it 'should allow default value blocks to reference other default values' do
@@ -77,6 +77,16 @@ describe Model do
   it 'should allow default value blocks to reference other assigned values' do
     user = UserModel.new(first: 'Peidong', last: 'Yang')
     expect(user.email).to eql "Peidong.Yang@devmail.company.com"
+  end
+
+  it 'should allow a second key definition to replace a previous definition' do
+    class SimpleModel < Model
+      key(:slot) { 'first' }
+      key(:slot) { 'second' }
+    end
+    simple = SimpleModel.new
+    expect(simple.keys).to eql [:slot]
+    expect(simple.slot).to eql 'second'
   end
 
 end

@@ -9,7 +9,7 @@ class Model
     # define a key and an optional block that provides a default value for the key
     def key(symbol, &block)
       @keys ||= []
-      @keys << symbol
+      @keys << symbol unless @keys.include? symbol
       attr_accessor symbol
       @defaults ||= {}
       @defaults[symbol] = block if block
