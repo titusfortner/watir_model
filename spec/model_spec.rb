@@ -83,4 +83,19 @@ describe Model do
     expect(simple.slot).to eql 'second'
   end
 
+  class OwnerModel < UserModel
+    key(:email) { "#{first}.#{last}@owner.company.com" }
+    key(:address) { '5210 Paseo de Pablo' }
+  end
+
+  it 'should inherit keys' do
+    owner = OwnerModel.new
+    expect(owner.keys).to eql [:first, :last, :email, :address]
+  end
+
+  it 'should inherit defaults' do
+    owner = OwnerModel.new
+    expect(owner.email).to eql "#{owner.first}.#{owner.last}@owner.company.com"
+  end
+
 end

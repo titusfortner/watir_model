@@ -4,15 +4,26 @@ require 'pp'
 class Model
   class << self
 
-    attr_reader :keys, :defaults
+    attr_writer :keys, :defaults
+
+    def keys
+      @keys ||= []
+    end
+
+    def defaults
+      @defaults ||= {}
+    end
+
+    def inherited(subclass)
+      subclass.keys = keys.dup
+      subclass.defaults = defaults.dup
+    end
 
     # define a key and an optional block that provides a default value for the key
     def key(symbol, &block)
-      @keys ||= []
-      @keys << symbol unless @keys.include? symbol
+      keys << symbol unless @keys.include? symbol
       attr_accessor symbol
-      @defaults ||= {}
-      @defaults[symbol] = block if block
+      defaults[symbol] = block if block
     end
   end
 
