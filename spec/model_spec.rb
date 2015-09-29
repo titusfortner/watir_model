@@ -56,12 +56,6 @@ describe Model do
     expect { AddressModel.new(a: 'hi', b: 'hello') }.to raise_error(ArgumentError, 'unknown keywords: a, b')
   end
 
-  it 'should be able to be updated' do
-    address = AddressModel.new
-    address.zip = '02134'
-    expect(address.zip).to eql '02134'
-  end
-
   require 'faker'
   class UserModel < Model
     key(:first) { Faker::Name.first_name }
