@@ -36,6 +36,14 @@ describe Model do
     expect(address.street1).to eql '1101 Fifth St'
   end
 
+  it 'should allow default values to be removed' do
+    address1 = AddressModel.new(zip: nil)
+    expect(address1.zip).to eql nil
+    address2 = AddressModel.new
+    address2.zip = nil
+    expect(address2.zip).to eql nil
+  end
+
   it 'should track its keys in the order defined' do
     address = AddressModel.new
     expect(address.keys).to eql [:street1, :street2, :city, :state, :zip]

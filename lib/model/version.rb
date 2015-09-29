@@ -1,3 +1,3 @@
-module Model
+class Model
   VERSION = "0.1.0"
 end
