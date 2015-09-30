@@ -98,4 +98,9 @@ describe Model do
     expect(owner.email).to eql "#{owner.first}.#{owner.last}@owner.company.com"
   end
 
+  it 'should allow access to keys using hash syntax' do
+    user = UserModel.new(first: 'Ken')
+    expect(user[:first]).to eql 'Ken'
+  end
+
 end

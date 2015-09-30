@@ -43,4 +43,8 @@ class Model
     self.class.keys
   end
 
+  def [] key
+    send key
+  end
+
 end
