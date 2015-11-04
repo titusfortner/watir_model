@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'model/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "model"
+  spec.name = "test-model"
   spec.version       = Model::VERSION
   spec.authors       = ["Bret Pettichord"]
   spec.email         = ["bret@pettichord.com"]
