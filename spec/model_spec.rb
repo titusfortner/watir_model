@@ -103,4 +103,18 @@ describe Model do
     expect(user[:first]).to eql 'Ken'
   end
 
+  it 'should know whether two models are equal' do
+    user1 = UserModel.new(first: 'Kartik', last: 'Chandran')
+    user2 = UserModel.new(first: 'Kartik', last: 'Chandran')
+    expect(user1).to eql user2
+  end
+
+  it 'should not find a model equal to its subset' do
+    UserModel.key(:id)
+    user1 = UserModel.new(first: 'Kartik', last: 'Chandran')
+    user2 = UserModel.new(id: 1, first: 'Kartik', last: 'Chandran')
+    expect(user1).to_not eql user2
+    expect(user2).to_not eql user1
+  end
+
 end

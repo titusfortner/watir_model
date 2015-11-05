@@ -47,4 +47,9 @@ class Model
     send key
   end
 
+  def eql?(other)
+    keys.all? { |k| send(k) == other[k] }
+  end
+  alias_method :==, :eql?
+
 end
