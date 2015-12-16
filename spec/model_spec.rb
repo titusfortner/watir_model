@@ -56,6 +56,10 @@ describe Model do
     expect { AddressModel.new(a: 'hi', b: 'hello') }.to raise_error(ArgumentError, 'unknown keywords: a, b')
   end
 
+  it 'should fail if undefined keys are defined' do
+    expect { AddressModel.new(:street => '1101 W Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
+  end
+
   require 'faker'
   class UserModel < Model
     key(:first) { Faker::Name.first_name }
