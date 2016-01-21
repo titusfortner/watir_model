@@ -1,7 +1,6 @@
-require "model/version"
 require 'pp'
 
-class Model
+class WatirModel
   class << self
 
     attr_writer :keys, :defaults
