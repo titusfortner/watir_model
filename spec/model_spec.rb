@@ -121,4 +121,12 @@ describe Model do
     expect(user2).to_not eql user1
   end
 
+  it 'can update model values with a hash' do
+    address = AddressModel.new
+    address.update(street1: '1101 Fifth St',
+                   street2: 'Suite 300')
+    expect(address.street1).to eql '1101 Fifth St'
+    expect(address.street2).to eql 'Suite 300'
+  end
+
 end

@@ -27,16 +27,22 @@ class Model
     end
   end
 
-  def initialize(hash={})
-    unknown = hash.keys - keys
-    if unknown.count > 0
-      raise ArgumentError, "unknown keyword#{'s' if unknown.count > 1}: #{unknown.join', '}"
-    end
-    hash.each_pair {|key, v| instance_variable_set "@#{key}", v}
+  def initialize(hash=nil)
+    hash ||= {}
+    update(hash)
+
     (self.class.defaults.keys - hash.keys).each do |key|
       block = self.class.defaults[key]
       instance_variable_set("@#{key}", instance_exec(&block))
     end
+  end
+
+  def update(hash)
+    unknown = hash.keys - keys
+    if unknown.count > 0
+      raise ArgumentError, "unknown keyword#{'s' if unknown.count > 1}: #{unknown.join', '}"
+    end
+    hash.each {|key, v| instance_variable_set "@#{key}", v}
   end
 
   def keys
