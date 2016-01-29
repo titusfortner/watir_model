@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'model/version'
+require 'watir_model/version'
 
 Gem::Specification.new do |spec|
-  spec.name = "test-model"
-  spec.version       = Model::VERSION
+  spec.name = "watir_model"
+  spec.version       = WatirModel::VERSION
   spec.authors       = ["Bret Pettichord"]
   spec.email         = ["bret@pettichord.com"]
 
   spec.summary = %q{This is a simple class for modelling test data.}
   spec.description = %q{This is a simple class for modelling test data. It is based on our experience with Watirmark::Model::Factory.}
-  spec.homepage = "https://github.com/bret/model"
+  spec.homepage = "https://github.com/bret/watir_model"
   spec.license = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

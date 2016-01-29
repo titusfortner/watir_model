@@ -1,10 +1,10 @@
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'model'
+require 'watir_model'
 
-describe Model do
+describe WatirModel do
 
-  class AddressModel < Model
+  class AddressModel < WatirModel
     key(:street1) { '11800 Domain Blvd' }
     key(:street2)
     key(:city) { 'Austin' }
@@ -61,7 +61,7 @@ describe Model do
   end
 
   require 'faker'
-  class UserModel < Model
+  class UserModel < WatirModel
     key(:first) { Faker::Name.first_name }
     key(:last) { Faker::Name.last_name }
     key(:email) { "#{first}.#{last}@devmail.company.com" }
@@ -78,7 +78,7 @@ describe Model do
   end
 
   it 'should allow a second key definition to replace a previous definition' do
-    class SimpleModel < Model
+    class SimpleModel < WatirModel
       key(:slot) { 'first' }
       key(:slot) { 'second' }
     end
@@ -113,7 +113,7 @@ describe Model do
     expect(user1).to eql user2
   end
 
-  it 'should not find a model equal to its subset' do
+  it 'should not find a watir_model equal to its subset' do
     UserModel.key(:id)
     user1 = UserModel.new(first: 'Kartik', last: 'Chandran')
     user2 = UserModel.new(id: 1, first: 'Kartik', last: 'Chandran')
