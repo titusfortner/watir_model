@@ -51,20 +51,20 @@ class WatirModel
     (self.class.defaults.keys - hash.keys).each do |key|
       block = self.class.defaults[key]
       object = self.class.data_types[key]
-
+      result = ENV[key.to_s.upcase] || instance_exec(&block)
       value = case
               when object == 'Key'
-                instance_exec(&block)
+                result
               when object == String
-                instance_exec(&block).to_s
+                result.to_s
               when object == Integer
-                instance_exec(&block).to_i
+                result.to_i
               when object == Float
-                instance_exec(&block).to_f
+                result.to_f
               when object == 'Boolean'
-                eval instance_exec(&block)
+                eval result
               else
-                object.new instance_exec(&block)
+                object.new result
               end
       instance_variable_set("@#{key}", value)
     end

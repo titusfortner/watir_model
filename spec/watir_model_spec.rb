@@ -150,4 +150,14 @@ describe WatirModel do
     expect(shipping.postage).to be_a Float
   end
 
+  it 'prefers Environment Variables to provided defaults' do
+    ENV['DEFAULT'] = 'false'
+    class DefaultModel < WatirModel
+      boolean(:default) { 'true' }
+    end
+
+    shipping = DefaultModel.new
+    expect(shipping.default).to be_a FalseClass
+  end
+
 end
