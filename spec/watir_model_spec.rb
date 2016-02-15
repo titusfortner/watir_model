@@ -129,4 +129,25 @@ describe WatirModel do
     expect(address.street2).to eql 'Suite 300'
   end
 
+  class ShippingModel < WatirModel
+    time(:updated_at) { '2016-02-15' }
+    string(:city) { 'Anchorage' }
+    string(:state) { 'AK' }
+    string(:postal) { 99530-9998 }
+    integer(:fedex_score) { '1' }
+    boolean(:default) { 'true' }
+    float(:postage) { '22.22' }
+  end
+
+  it 'converts data types' do
+    shipping = ShippingModel.new
+    expect(shipping.updated_at).to be_a Time
+    expect(shipping.city).to be_a String
+    expect(shipping.state).to be_a String
+    expect(shipping.postal).to be_a String
+    expect(shipping.fedex_score).to be_a Integer
+    expect(shipping.default).to be_a TrueClass
+    expect(shipping.postage).to be_a Float
+  end
+
 end
