@@ -160,4 +160,36 @@ describe WatirModel do
     expect(shipping.default).to be_a FalseClass
   end
 
+  it 'coverts watir model to hash' do
+    test_hash = {
+        test_array: [1, 2, 3, 4, 5],
+        test_value: 'value',
+        test_model: {
+            value: 'value'
+        },
+        test_hash: {
+            t1: '1', t2: [1, 2, 3, 4, 5], t3: { value: 'value' }, t4: { a1: { value: 'value' } }
+        }
+    }
+
+    class TestModel < WatirModel
+      key(:value) { 'value' }
+    end
+
+    class TestClass < WatirModel
+      key(:test_array) { [1,2,3,4,5,] }
+      key(:test_value) { 'value' }
+      key(:test_model) { TestModel.new }
+      key(:test_hash)  { { t1: '1', t2: test_array, t3: test_model, t4: { a1: test_model } } }
+    end
+
+    test_data = TestClass.new.to_hash
+
+    expect(test_data[:test_array]).to be_an Array
+    expect(test_data[:test_value]).to be_a  String
+    expect(test_data[:test_model]).to be_a  Hash
+    expect(test_data[:test_hash]).to  be_a  Hash
+    expect(test_data).to eql(test_hash)
+  end
+
 end

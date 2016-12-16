@@ -91,4 +91,25 @@ class WatirModel
   end
   alias_method :==, :eql?
 
+  def to_hash(opt = nil)
+    opt ||= keys
+    opt.each_with_object({}) do |key, hash|
+      value = send(key)
+      hash[key] = process_value(value)
+    end
+  end
+
+  def process_value(value)
+    case value
+      when WatirModel
+        value.to_hash
+      when Hash
+        value.map { |k,v| [k, process_value(v)] }.to_h
+      when Array
+        value.map { |v| process_value(v) }
+      else
+        value
+    end
+  end
+  
 end
