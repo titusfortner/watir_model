@@ -85,6 +85,34 @@ describe WatirModel do
     expect(simple.slot).to eql 'second'
   end
 
+  describe '#convert' do
+    it 'creates a new model as a subset of a hash' do
+      user_data = {first: 'Peidong', last: 'Yang', foo: 'foo', bar: 'bar'}
+      user = UserModel.convert(user_data)
+
+      expect(user.first).to eq 'Peidong'
+      expect { user.foo }.to raise_error(NoMethodError)
+      expect { user.bar }.to raise_error(NoMethodError)
+    end
+
+    it 'allows additional attributes to be accessed' do
+      user_data = {first: 'Billy', last: 'Shakespere', foo: 'foo', bar: 'bar', foobar: 'foobar'}
+      user = UserModel.convert(user_data, :foo, :bar)
+
+      expect(user.first).to eq 'Billy'
+      expect(user.foo).to eq 'foo'
+      expect(user.bar).to eq 'bar'
+      expect { user.foobar }.to raise_error(NoMethodError)
+    end
+
+    it 'only adds accessors to single instance' do
+      user_data = {first: 'Billy', last: 'Shakespere', foo: 'foo', bar: 'bar'}
+      UserModel.convert(user_data, :foo, :bar)
+      user = UserModel.new
+      expect { user.foo }.to raise_error(NoMethodError)
+    end
+  end
+
   class OwnerModel < UserModel
     key(:email) { "#{first}.#{last}@owner.company.com" }
     key(:address) { '5210 Paseo de Pablo' }

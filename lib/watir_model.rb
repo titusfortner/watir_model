@@ -24,6 +24,17 @@ class WatirModel
       attr_accessor symbol
       defaults[symbol] = block if block
     end
+
+    def convert(hash, *args)
+      filtered = hash.reject { |k| !keys.include?(k) }
+      model = new(filtered)
+      args.each do |key|
+        model.instance_eval do
+          define_singleton_method(key) { hash[key] }
+        end
+      end
+      model
+    end
   end
 
   def initialize(hash={})
