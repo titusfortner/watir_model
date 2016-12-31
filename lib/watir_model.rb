@@ -51,21 +51,8 @@ class WatirModel
     (self.class.defaults.keys - hash.keys).each do |key|
       block = self.class.defaults[key]
       object = self.class.data_types[key]
-      result = ENV[key.to_s.upcase] || instance_exec(&block)
-      value = case
-              when object == 'Key'
-                result
-              when object == String
-                result.to_s
-              when object == Integer
-                result.to_i
-              when object == Float
-                result.to_f
-              when object == 'Boolean'
-                eval result
-              else
-                object.new result
-              end
+      result = instance_exec(&block)
+      value = process_type(object, result)
       instance_variable_set("@#{key}", value)
     end
   end
@@ -89,6 +76,7 @@ class WatirModel
   def eql?(other)
     keys.all? { |k| send(k) == other[k] }
   end
+
   alias_method :==, :eql?
 
   def to_hash(opt = nil)
@@ -99,17 +87,35 @@ class WatirModel
     end
   end
 
+  protected
+
   def process_value(value)
     case value
       when WatirModel
         value.to_hash
       when Hash
-        value.map { |k,v| [k, process_value(v)] }.to_h
+        value.map { |k, v| [k, process_value(v)] }.to_h
       when Array
         value.map { |v| process_value(v) }
       else
         value
     end
   end
-  
+
+  def process_type(object, result)
+    case
+      when object == 'Key'
+        result
+      when object == String
+        result.to_s
+      when object == Integer
+        result.to_i
+      when object == Float
+        result.to_f
+      when object == 'Boolean'
+        eval result
+      else
+        object.new result
+    end
+  end
 end

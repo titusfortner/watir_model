@@ -1,6 +1,4 @@
-lib = File.expand_path('../../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'watir_model'
+require 'spec_helper'
 
 describe WatirModel do
 
@@ -148,16 +146,6 @@ describe WatirModel do
     expect(shipping.fedex_score).to be_a Integer
     expect(shipping.default).to be_a TrueClass
     expect(shipping.postage).to be_a Float
-  end
-
-  it 'prefers Environment Variables to provided defaults' do
-    ENV['DEFAULT'] = 'false'
-    class DefaultModel < WatirModel
-      boolean(:default) { 'true' }
-    end
-
-    shipping = DefaultModel.new
-    expect(shipping.default).to be_a FalseClass
   end
 
   it 'coverts watir model to hash' do
