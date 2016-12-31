@@ -44,20 +44,21 @@ class WatirModel
     end
   end
 
-  def initialize(hash=nil)
-    hash ||= {}
+  def initialize(hash={})
     update(hash)
 
     (self.class.defaults.keys - hash.keys).each do |key|
       block = self.class.defaults[key]
       object = self.class.data_types[key]
-      result = instance_exec(&block)
+      result = default_value(key, block)
       value = process_type(object, result)
       instance_variable_set("@#{key}", value)
     end
   end
 
   def update(hash)
+    hash ||= {}
+
     unknown = hash.keys - keys
     if unknown.count > 0
       raise ArgumentError, "unknown keyword#{'s' if unknown.count > 1}: #{unknown.join ', '}"
@@ -100,6 +101,10 @@ class WatirModel
       else
         value
     end
+  end
+
+  def default_value(key, block)
+    instance_exec(&block)
   end
 
   def process_type(object, result)
