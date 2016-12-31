@@ -128,24 +128,13 @@ describe WatirModel do
   end
 
   class ShippingModel < WatirModel
-    time(:updated_at) { '2016-02-15' }
-    string(:city) { 'Anchorage' }
-    string(:state) { 'AK' }
-    string(:postal) { 99530-9998 }
-    integer(:fedex_score) { '1' }
-    boolean(:default) { 'true' }
-    float(:postage) { '22.22' }
-  end
-
-  it 'converts data types' do
-    shipping = ShippingModel.new
-    expect(shipping.updated_at).to be_a Time
-    expect(shipping.city).to be_a String
-    expect(shipping.state).to be_a String
-    expect(shipping.postal).to be_a String
-    expect(shipping.fedex_score).to be_a Integer
-    expect(shipping.default).to be_a TrueClass
-    expect(shipping.postage).to be_a Float
+    key(:updated_at) { '2016-02-15' }
+    key(:city) { 'Anchorage' }
+    key(:state) { 'AK' }
+    key(:postal) { 99530-9998 }
+    key(:fedex_score) { '1' }
+    key(:default) { 'true' }
+    key(:postage) { '22.22' }
   end
 
   it 'coverts watir model to hash' do
@@ -175,7 +164,7 @@ describe WatirModel do
 
     expect(test_data[:test_array]).to be_an Array
     expect(test_data[:test_value]).to be_a  String
-    expect(test_data[:test_model]).to be_a  Hash
+    expect(test_data).to be_a  Hash
     expect(test_data[:test_hash]).to  be_a  Hash
     expect(test_data).to eql(test_hash)
   end
