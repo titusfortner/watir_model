@@ -63,6 +63,7 @@ class WatirModel
     opt ||= keys
     opt.each_with_object({}) do |key, hash|
       value = send(key)
+      next if value.nil?
       hash[key] = value
     end
   end
