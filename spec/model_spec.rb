@@ -197,4 +197,81 @@ describe WatirModel do
     expect(test_data).to eql(test_hash)
   end
 
+  class TypeModel < WatirModel
+    key(:name, data_type: String) { 'Roger' }
+    key(:time, data_type: Time) { Time.now }
+    key(:datetime, data_type: DateTime) { DateTime.now }
+    key(:number, data_type: Integer) { 4 }
+    key(:floating, data_type: Float) { 4.0/3 }
+    key(:exists, data_type: :boolean) { false }
+    key(:weekday, data_type: Symbol) { :monday }
+    key(:whoops, data_type: Symbol) { 'string' }
+    key(:default) { 'whatevs' }
+    key(:hashing, data_type: Hash)
+    key(:list, data_type: Array)
+    key(:modeling, data_type: ShippingModel)
+  end
+
+  describe 'Types' do
+    it 'converts Symbol to String' do
+      tm = TypeModel.new(name: :foo)
+      expect(tm.name).to be_a String
+    end
+
+    it 'converts String to Time' do
+      tm = TypeModel.new(time: "2017-01-06 22:14:33 -0600")
+      expect(tm.time).to be_a Time
+    end
+
+    it 'converts String to DateTime' do
+      tm = TypeModel.new(datetime: "2017-01-06T21:50:44-06:00")
+      expect(tm.datetime).to be_a DateTime
+    end
+
+    it 'converts String to Integer' do
+      tm = TypeModel.new(number: '372.0')
+      expect(tm.number).to be_a Integer
+    end
+
+    it 'converts String to Float' do
+      tm = TypeModel.new(floating: '372.0')
+      expect(tm.floating).to be_a Float
+    end
+
+    it 'converts String to Boolean' do
+      tm = TypeModel.new(exists: 'true')
+      expect(tm.exists).to be_a TrueClass
+    end
+
+    it 'converts String to Symbol' do
+      tm = TypeModel.new(weekday: 'tuesday')
+      expect(tm.weekday).to be_a Symbol
+    end
+
+    it 'raises exception if unable to convert' do
+      expect { TypeModel.new(exists: 7) }.to raise_error(TypeError)
+    end
+
+    it 'converts mismatched default value' do
+      expect(TypeModel.new.whoops).to be_a Symbol
+    end
+
+    it 'converts json to hash' do
+      json = {foo: :bar}.to_json
+      tm = TypeModel.new(hashing: json)
+      expect(tm.hashing).to be_a Hash
+    end
+
+    it 'converts json to array' do
+      json = [:foo, :bar].to_json
+      tm = TypeModel.new(list: json)
+      expect(tm.list).to be_a Array
+    end
+
+    it 'converts a hash to a Watir Model' do
+      sm = ShippingModel.new.to_hash
+      tm = TypeModel.new(modeling: sm)
+      expect(tm.modeling).to be_a WatirModel
+    end
+  end
 end
