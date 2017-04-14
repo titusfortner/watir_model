@@ -2,7 +2,7 @@
 
 This is a simple class for modelling test data. It is based on our experience with [Watirmark::Model::Factory](https://github.com/watirmark/watirmark/blob/master/spec/model_factory_spec.rb).
 
-Please see [spec/watir_model_spec.rb](spec/watir_model_spec.rb) for examples.
+Please see [spec/model_spec.rb](spec/model_spec.rb) for examples.
 
 ## Installation
 
