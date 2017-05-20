@@ -28,6 +28,11 @@ describe WatirModel do
     expect(address.street1).to eql '1101 Fifth St'
   end
 
+  it 'should allow values to be set with keys as Strings' do
+    address = AddressModel.new('street1' => '1101 Fifth St')
+    expect(address.street1).to eql '1101 Fifth St'
+  end
+
   it 'should allow values to be set after initialized' do
     address = AddressModel.new
     address.street1 = '1101 Fifth St'
@@ -110,6 +115,13 @@ describe WatirModel do
       UserModel.convert(user_data, :foo, :bar)
       user = UserModel.new
       expect { user.foo }.to raise_error(NoMethodError)
+    end
+
+    it 'accepts keys as Strings' do
+      user_data = {'first' => 'Peidong'}
+      user = UserModel.convert(user_data)
+
+      expect(user.first).to eq 'Peidong'
     end
   end
 

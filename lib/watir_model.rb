@@ -1,4 +1,4 @@
-require 'pp'
+require 'active_support/hash_with_indifferent_access'
 
 class WatirModel
   class << self
@@ -26,6 +26,7 @@ class WatirModel
     end
 
     def convert(hash, *args)
+      hash.deep_symbolize_keys!
       filtered = hash.reject { |k| !keys.include?(k) }
       model = new(filtered)
       args.each do |key|
@@ -38,6 +39,7 @@ class WatirModel
   end
 
   def initialize(hash={})
+    hash.deep_symbolize_keys!
     update(hash)
 
     (self.class.defaults.keys - hash.keys).each do |key|
