@@ -1,3 +1,7 @@
+### 0.3.1 (2017-05-19)
+
+* initialize and convert Model using Hash with keys as Strings
+
 ### 0.3.0 (2016-12-31)
 
 * move ENV variable override into ConfigModel subclass
