@@ -171,7 +171,7 @@ describe WatirModel do
     key(:updated_at) { '2016-02-15' }
     key(:city) { 'Anchorage' }
     key(:state) { 'AK' }
-    key(:postal) { 99530-9998 }
+    key(:postal) { 99530 - 9998 }
     key(:fedex_score) { '1' }
     key(:default) { 'true' }
     key(:postage) { '22.22' }
@@ -185,7 +185,7 @@ describe WatirModel do
             value: 'value'
         },
         test_hash: {
-            t1: '1', t2: [1, 2, 3, 4, 5], t3: { value: 'value' }, t4: { a1: { value: 'value' } }
+            t1: '1', t2: [1, 2, 3, 4, 5], t3: {value: 'value'}, t4: {a1: {value: 'value'}}
         }
     }
 
@@ -194,19 +194,96 @@ describe WatirModel do
     end
 
     class TestClass < WatirModel
-      key(:test_array) { [1,2,3,4,5,] }
+      key(:test_array) { [1, 2, 3, 4, 5,] }
       key(:test_value) { 'value' }
       key(:test_model) { TestModel.new }
-      key(:test_hash)  { { t1: '1', t2: test_array, t3: test_model, t4: { a1: test_model } } }
+      key(:test_hash) { {t1: '1', t2: test_array, t3: test_model, t4: {a1: test_model}} }
     end
 
     test_data = TestClass.new.to_hash
 
     expect(test_data[:test_array]).to be_an Array
-    expect(test_data[:test_value]).to be_a  String
-    expect(test_data).to be_a  Hash
-    expect(test_data[:test_hash]).to  be_a  Hash
+    expect(test_data[:test_value]).to be_a String
+    expect(test_data).to be_a Hash
+    expect(test_data[:test_hash]).to be_a Hash
     expect(test_data).to eql(test_hash)
   end
 
+  class TypeExample < WatirModel
+    key(:name, data_type: String) { 'Roger' }
+    key(:time, data_type: Time) { Time.now }
+    key(:datetime, data_type: DateTime) { DateTime.now }
+    key(:number, data_type: Integer) { 4 }
+    key(:floating, data_type: Float) { 4.0 / 3 }
+    key(:exists, data_type: :boolean) { false }
+    key(:weekday, data_type: Symbol) { :monday }
+    key(:whoops, data_type: Symbol) { 'string' }
+    key(:default) { 'whatevs' }
+    key(:hashing, data_type: Hash)
+    key(:list, data_type: Array)
+    key(:modeling, data_type: ShippingModel)
+  end
+
+  describe 'Types' do
+    it 'converts Symbol to String' do
+      te = TypeExample.new(name: :foo)
+      expect(te.name).to be_a String
+    end
+
+    it 'converts String to Time' do
+      te = TypeExample.new(time: "2017-01-06 22:14:33 -0600")
+      expect(te.time).to be_a Time
+    end
+
+    it 'converts String to DateTime' do
+      te = TypeExample.new(datetime: "2017-01-06T21:50:44-06:00")
+      expect(te.datetime).to be_a DateTime
+    end
+
+    it 'converts String to Integer' do
+      te = TypeExample.new(number: '372.0')
+      expect(te.number).to be_a Integer
+    end
+
+    it 'converts String to Float' do
+      te = TypeExample.new(floating: '372.0')
+      expect(te.floating).to be_a Float
+    end
+
+    it 'converts String to Boolean' do
+      te = TypeExample.new(exists: 'true')
+      expect(te.exists).to be_a TrueClass
+    end
+
+    it 'converts String to Symbol' do
+      te = TypeExample.new(weekday: 'tuesday')
+      expect(te.weekday).to be_a Symbol
+    end
+
+    it 'raises exception if unable to convert' do
+      expect { TypeExample.new(exists: 7) }.to raise_error(TypeError)
+    end
+
+    it 'converts mismatched default value' do
+      expect(TypeExample.new.whoops).to be_a Symbol
+    end
+
+    it 'converts json to hash' do
+      json = {foo: :bar}.to_json
+      te = TypeExample.new(hashing: json)
+      expect(te.hashing).to be_a Hash
+    end
+
+    it 'converts json to array' do
+      json = [:foo, :bar].to_json
+      te = TypeExample.new(list: json)
+      expect(te.list).to be_a Array
+    end
+
+    it 'converts a hash to a Watir Model' do
+      sm = ShippingModel.new.to_hash
+      te = TypeExample.new(modeling: sm)
+      expect(te.modeling).to be_a WatirModel
+    end
+  end
 end
