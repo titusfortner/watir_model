@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe WatirModel do
 
-  class AddressModel < WatirModel
+  class Address < WatirModel
     key(:street1) { '11800 Domain Blvd' }
     key(:street2)
     key(:city) { 'Austin' }
@@ -11,7 +11,7 @@ describe WatirModel do
   end
 
   it 'should be usable without needing to pass anything to it' do
-    address = AddressModel.new
+    address = Address.new
     expect(address.street1).to eql '11800 Domain Blvd'
     expect(address.city).to eql 'Austin'
     expect(address.state).to eql 'TX'
@@ -19,48 +19,48 @@ describe WatirModel do
   end
 
   it 'should allow keys with no default values' do
-    address = AddressModel.new
+    address = Address.new
     expect(address.street2).to eql nil
   end
 
   it 'should allow values to be set when initialized' do
-    address = AddressModel.new(street1: '1101 Fifth St')
+    address = Address.new(street1: '1101 Fifth St')
     expect(address.street1).to eql '1101 Fifth St'
   end
 
   it 'should allow values to be set with keys as Strings' do
-    address = AddressModel.new('street1' => '1101 Fifth St')
+    address = Address.new('street1' => '1101 Fifth St')
     expect(address.street1).to eql '1101 Fifth St'
   end
 
   it 'should allow values to be set after initialized' do
-    address = AddressModel.new
+    address = Address.new
     address.street1 = '1101 Fifth St'
     expect(address.street1).to eql '1101 Fifth St'
   end
 
   it 'should allow default values to be removed' do
-    address1 = AddressModel.new(zip: nil)
+    address1 = Address.new(zip: nil)
     expect(address1.zip).to eql nil
-    address2 = AddressModel.new
+    address2 = Address.new
     address2.zip = nil
     expect(address2.zip).to eql nil
   end
 
   it 'should track its keys in the order defined' do
-    address = AddressModel.new
+    address = Address.new
     expect(address.keys).to eql [:street1, :street2, :city, :state, :zip]
   end
 
   it 'should fail if undefined keys are used' do
-    address = AddressModel.new
+    address = Address.new
     expect { address.street }.to raise_error(NoMethodError)
-    expect { AddressModel.new(street: '1101 Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
-    expect { AddressModel.new(a: 'hi', b: 'hello') }.to raise_error(ArgumentError, 'unknown keywords: a, b')
+    expect { Address.new(street: '1101 Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
+    expect { Address.new(a: 'hi', b: 'hello') }.to raise_error(ArgumentError, 'unknown keywords: a, b')
   end
 
   it 'should fail if undefined keys are defined' do
-    expect { AddressModel.new(:street => '1101 W Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
+    expect { Address.new(:street => '1101 W Fifth St') }.to raise_error(ArgumentError, 'unknown keyword: street')
   end
 
   require 'faker'
@@ -160,14 +160,14 @@ describe WatirModel do
   end
 
   it 'can update model values with a hash' do
-    address = AddressModel.new
+    address = Address.new
     address.update(street1: '1101 Fifth St',
                    street2: 'Suite 300')
     expect(address.street1).to eql '1101 Fifth St'
     expect(address.street2).to eql 'Suite 300'
   end
 
-  class ShippingModel < WatirModel
+  class ShippingAddress < WatirModel
     key(:updated_at) { '2016-02-15' }
     key(:city) { 'Anchorage' }
     key(:state) { 'AK' }
@@ -221,7 +221,7 @@ describe WatirModel do
     key(:default) { 'whatevs' }
     key(:hashing, data_type: Hash)
     key(:list, data_type: Array)
-    key(:modeling, data_type: ShippingModel)
+    key(:modeling, data_type: ShippingAddress)
   end
 
   describe 'Types' do
@@ -281,9 +281,40 @@ describe WatirModel do
     end
 
     it 'converts a hash to a Watir Model' do
-      sm = ShippingModel.new.to_hash
+      sm = ShippingAddress.new.to_hash
       te = TypeExample.new(modeling: sm)
       expect(te.modeling).to be_a WatirModel
     end
   end
+
+  describe 'Factory' do
+    it 'initializes model from data in yml' do
+      address = Address.alaska
+      expect(address.street1).to eql '11800 Domain Blvd'
+      expect(address.city).to eql 'Anchorage'
+      expect(address.state).to eql 'AK'
+      expect(address.zip).to eql '99501'
+    end
+
+    it 'raises exception when requested data is not present in the file' do
+      msg = "Factory 'oregon' does not exist in 'config/data/address.yml'"
+      expect { Address.oregon }.to raise_exception ArgumentError, msg
+    end
+
+    it 'raises exception when requested file does not exist' do
+      msg = "undefined method `oregon' for ShippingAddress:Class"
+      expect { ShippingAddress.oregon }.to raise_exception NoMethodError, msg
+    end
+
+    it 'sets default directory for yaml' do
+      begin
+        WatirModel.yml_directory = 'config/alternate'
+        msg = "Factory 'oregon' does not exist in 'config/alternate/address.yml'"
+        expect { Address.oregon }.to raise_exception ArgumentError, msg
+      ensure
+        WatirModel.yml_directory = nil
+      end
+    end
+  end
+
 end

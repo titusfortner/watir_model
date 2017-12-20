@@ -2,9 +2,11 @@ require 'active_support/hash_with_indifferent_access'
 require 'json'
 require 'date'
 require 'time'
+require 'yml_reader'
 
 class WatirModel
   class << self
+    include YmlReader
 
     attr_writer :keys, :data_types, :defaults
 
@@ -77,6 +79,19 @@ class WatirModel
       end
       model
     end
+
+    def default_directory
+      'config/data'
+    end
+
+    def method_missing(method, *args, &block)
+      file = Dir.glob("#{WatirModel.yml_directory}/#{self.to_s.downcase}.yml").first
+      return super if file.nil?
+      data = YAML.load_file(file)[method]
+      raise ArgumentError, "Factory '#{method}' does not exist in '#{file}'" if data.nil?
+      new(data)
+    end
+
   end
 
   def initialize(hash={})
