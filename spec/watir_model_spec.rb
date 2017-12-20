@@ -315,6 +315,17 @@ describe WatirModel do
         WatirModel.yml_directory = nil
       end
     end
+
+    class SubTypeExample < TypeExample
+      key(:modeling, data_type: Address) { 'alaska' }
+    end
+
+    it 'loads default type information from factory' do
+      address = SubTypeExample.new.modeling
+      expect(address.city).to eql 'Anchorage'
+      expect(address.state).to eql 'AK'
+      expect(address.zip).to eql '99501'
+    end
   end
 
 end

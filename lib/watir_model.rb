@@ -62,7 +62,9 @@ class WatirModel
               when data_type == Array
                 JSON.parse value
               else
-                data_type.new(value)
+                file = factory_file(data_type)
+                data = data_from_yaml(file, value) || value
+                data_type.new(data)
               end
       return value if value.is_a?(data_type)
       raise StandardError, "Unable to convert #{value} to #{data_type}"
@@ -85,13 +87,21 @@ class WatirModel
     end
 
     def method_missing(method, *args, &block)
-      file = Dir.glob("#{WatirModel.yml_directory}/#{self.to_s.downcase}.yml").first
-      return super if file.nil?
-      data = YAML.load_file(file)[method]
+      file = factory_file(self)
+      return super unless file
+      data = data_from_yaml(file, method)
       raise ArgumentError, "Factory '#{method}' does not exist in '#{file}'" if data.nil?
       new(data)
     end
 
+    def factory_file(type)
+      Dir.glob("#{WatirModel.yml_directory}/#{type.to_s.downcase}.yml").first
+    end
+
+    def data_from_yaml(file, value)
+      return nil unless !file.nil? || value.is_a?(Symbol) || value.is_a?(String)
+      YAML.load_file(file)[value.to_sym]
+    end
   end
 
   def initialize(hash={})
