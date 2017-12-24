@@ -171,7 +171,7 @@ describe WatirModel do
     key(:updated_at) { '2016-02-15' }
     key(:city) { 'Anchorage' }
     key(:state) { 'AK' }
-    key(:postal) { 99530 - 9998 }
+    key(:postal) { '99530-9998' }
     key(:fedex_score) { '1' }
     key(:default) { 'true' }
     key(:postage) { '22.22' }
@@ -328,4 +328,21 @@ describe WatirModel do
     end
   end
 
+  class Address < WatirModel
+    key(:street1, aliases: [:line1, :street_1]) { '11800 Domain Blvd' }
+  end
+
+  describe 'Alias Keys' do
+    it 'equates values from any alias' do
+      addr2 = Address.new(line1: '11800 Domain Blvd')
+      addr1 = Address.new(street1: '11800 Domain Blvd')
+      expect(addr1).to eql addr2
+    end
+
+    it 'does not store alias key' do
+      addr = Address.new(line1: '11800 Domain Blvd')
+      expect(addr.street1).to eq '11800 Domain Blvd'
+      expect { addr.line1 }.to raise_exception NoMethodError, /undefined method `line1'/
+    end
+  end
 end

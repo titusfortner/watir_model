@@ -8,10 +8,14 @@ class WatirModel
   class << self
     include YmlReader
 
-    attr_writer :keys, :data_types, :defaults
+    attr_writer :keys, :aliases, :data_types, :defaults
 
     def keys
       @keys ||= []
+    end
+
+    def aliases
+      @aliases ||= {}
     end
 
     def data_types
@@ -24,12 +28,14 @@ class WatirModel
 
     def inherited(subclass)
       subclass.keys = keys.dup
+      subclass.aliases = aliases.dup
       subclass.defaults = defaults.dup
       subclass.data_types = data_types.dup
     end
 
-    def key(symbol, data_type: nil, &block)
+    def key(symbol, data_type: nil, aliases: [], &block)
       keys << symbol unless @keys.include? symbol
+      aliases.each { |alias_key| self.aliases[alias_key] = symbol }
       attr_accessor symbol
       data_types[symbol] = data_type if data_type
       defaults[symbol] = block if block
@@ -119,6 +125,10 @@ class WatirModel
   def update(hash)
     hash ||= {}
 
+    (hash.keys & aliases.keys).each do |alias_key|
+      hash[aliases[alias_key]] = hash.delete(alias_key)
+    end
+
     unknown = hash.keys - keys
     if unknown.count > 0
       raise ArgumentError, "unknown keyword#{'s' if unknown.count > 1}: #{unknown.join ', '}"
@@ -130,6 +140,10 @@ class WatirModel
 
   def keys
     self.class.keys
+  end
+
+  def aliases
+    self.class.aliases
   end
 
   def [] key
