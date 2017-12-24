@@ -1,3 +1,10 @@
+### 0.4.0 (2017-12-24)
+
+* support for `:data_type` parameter to allow conversion and enforcement of key types
+* support for data defaults pulled from yaml files
+* support for referencing yaml defaults during initialization
+* support for key aliases to support comparing same values from different sources
+
 ### 0.3.1 (2017-05-19)
 
 * initialize and convert Model using Hash with keys as Strings
