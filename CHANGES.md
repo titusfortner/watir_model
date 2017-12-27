@@ -1,3 +1,7 @@
+### 0.4.1 (2017-12-26)
+
+* support for key aliases to work with `#convert`
+
 ### 0.4.0 (2017-12-24)
 
 * support for `:data_type` parameter to allow conversion and enforcement of key types
