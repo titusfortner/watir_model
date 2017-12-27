@@ -78,7 +78,7 @@ class WatirModel
 
     def convert(hash, *args)
       hash.deep_symbolize_keys!
-      filtered = hash.reject { |k| !keys.include?(k) }
+      filtered = hash.select { |k| keys.include?(k) || aliases.keys.include?(k) }
       model = new(filtered)
       args.each do |key|
         model.instance_eval do

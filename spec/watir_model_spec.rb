@@ -123,6 +123,12 @@ describe WatirModel do
 
       expect(user.first).to eq 'Peidong'
     end
+
+    it 'equates values from any alias' do
+      addr2 = Address.convert(line1: '123 Main St')
+      addr1 = Address.new(street1: '123 Main St')
+      expect(addr1).to eql addr2
+    end
   end
 
   class OwnerModel < UserModel
