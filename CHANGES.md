@@ -1,3 +1,7 @@
+### 0.4.2 (2017-12-27)
+
+* support for `:api` and `#to_api` for outputting JSON with alternate keys
+
 ### 0.4.1 (2017-12-26)
 
 * support for key aliases to work with `#convert`
