@@ -107,7 +107,7 @@ class WatirModel
     end
 
     def factory_file(type)
-      Dir.glob("#{WatirModel.yml_directory}/#{type.to_s.downcase}.yml").first
+      Dir.glob("#{WatirModel.yml_directory}/#{type.to_s[/[^:]*$/].downcase}.yml").first
     end
 
     def data_from_yaml(file, value)
