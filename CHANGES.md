@@ -1,3 +1,7 @@
+### 0.4.4 (2017-12-28)
+
+* fix bug for `#factory_file` dealing with namespaces
+
 ### 0.4.3 (2017-12-28)
 
 * support for `#to_hash` to work with nested models
