@@ -1,3 +1,7 @@
+### 0.4.3 (2017-12-28)
+
+* support for `#to_hash` to work with nested models
+
 ### 0.4.2 (2017-12-27)
 
 * support for `:api` and `#to_api` for outputting JSON with alternate keys
