@@ -8,7 +8,7 @@ class WatirModel
   class << self
     include YmlReader
 
-    attr_writer :keys, :aliases, :data_types, :defaults
+    attr_writer :keys, :aliases, :data_types, :defaults, :apis
 
     def keys
       @keys ||= []
@@ -22,6 +22,10 @@ class WatirModel
       @data_types ||= {}
     end
 
+    def apis
+      @apis ||= {}
+    end
+
     def defaults
       @defaults ||= {}
     end
@@ -29,14 +33,16 @@ class WatirModel
     def inherited(subclass)
       subclass.keys = keys.dup
       subclass.aliases = aliases.dup
+      subclass.apis = apis.dup
       subclass.defaults = defaults.dup
       subclass.data_types = data_types.dup
     end
 
-    def key(symbol, data_type: nil, aliases: [], &block)
+    def key(symbol, data_type: nil, aliases: [], api: nil, &block)
       keys << symbol unless @keys.include? symbol
       aliases.each { |alias_key| self.aliases[alias_key] = symbol }
       attr_accessor symbol
+      apis[symbol] = api if api
       data_types[symbol] = data_type if data_type
       defaults[symbol] = block if block
     end
@@ -146,6 +152,10 @@ class WatirModel
     self.class.aliases
   end
 
+  def apis
+    self.class.apis
+  end
+
   def [] key
     send key
   end
@@ -162,6 +172,14 @@ class WatirModel
       next if value.nil?
       hash[key] = value
     end
+  end
+
+  def to_api
+    hash = to_hash
+    apis.each do |key, value|
+      hash[value]  = hash.delete(key)
+    end
+    hash.to_json
   end
 
   private

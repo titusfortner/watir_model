@@ -334,21 +334,43 @@ describe WatirModel do
     end
   end
 
-  class Address < WatirModel
+  class AliasAddress < WatirModel
     key(:street1, aliases: [:line1, :street_1]) { '11800 Domain Blvd' }
   end
 
   describe 'Alias Keys' do
     it 'equates values from any alias' do
-      addr2 = Address.new(line1: '11800 Domain Blvd')
-      addr1 = Address.new(street1: '11800 Domain Blvd')
+      addr2 = AliasAddress.new(line1: '11800 Domain Blvd')
+      addr1 = AliasAddress.new(street1: '11800 Domain Blvd')
       expect(addr1).to eql addr2
     end
 
     it 'does not store alias key' do
-      addr = Address.new(line1: '11800 Domain Blvd')
+      addr = AliasAddress.new(line1: '11800 Domain Blvd')
       expect(addr.street1).to eq '11800 Domain Blvd'
       expect { addr.line1 }.to raise_exception NoMethodError, /undefined method `line1'/
+    end
+  end
+
+  class APIAddress < WatirModel
+    key(:street1, api: :street_address) { '11800 Domain Blvd' }
+    key(:street2, api: :secondary_address) { 'Apt 7'}
+    key(:city) { 'Austin' }
+    key(:state) { 'TX' }
+    key(:zip, api: :postal_code) { '78758' }
+  end
+
+
+  describe '#to_api' do
+    it 'converts' do
+      required_api = {street_address: '11800 Domain Blvd',
+                      secondary_address: 'Apt 7',
+                      city: 'Austin',
+                      state: 'TX',
+                      postal_code: '78758'}.to_json
+
+      api_address = APIAddress.new
+      expect(JSON.parse api_address.to_api).to eq JSON.parse required_api
     end
   end
 end
