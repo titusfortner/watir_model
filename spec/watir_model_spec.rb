@@ -125,8 +125,8 @@ describe WatirModel do
     end
 
     it 'equates values from any alias' do
-      addr2 = Address.convert(line1: '123 Main St')
-      addr1 = Address.new(street1: '123 Main St')
+      addr2 = AliasAddress.convert(line1: '123 Main St')
+      addr1 = AliasAddress.new(street1: '123 Main St')
       expect(addr1).to eql addr2
     end
   end
@@ -354,7 +354,7 @@ describe WatirModel do
 
   class APIAddress < WatirModel
     key(:street1, api: :street_address) { '11800 Domain Blvd' }
-    key(:street2, api: :secondary_address) { 'Apt 7'}
+    key(:street2, api: :secondary_address) { 'Apt 7' }
     key(:city) { 'Austin' }
     key(:state) { 'TX' }
     key(:zip, api: :postal_code) { '78758' }
@@ -371,6 +371,24 @@ describe WatirModel do
 
       api_address = APIAddress.new
       expect(JSON.parse api_address.to_api).to eq JSON.parse required_api
+    end
+
+    it 'equates values from any api' do
+      api = {street_address: '123 Main',
+             secondary_address: 'Apt 7',
+             city: 'Austin',
+             state: 'TX',
+             postal_code: '78758'}.to_json
+
+      addr1 = APIAddress.convert(JSON.parse api)
+      addr2 = APIAddress.new(street_address: '123 Main')
+      expect(addr1).to eql addr2
+    end
+
+    it 'does not store api as key' do
+      addr = APIAddress.new(street_address: '123 Main')
+      expect(addr.street1).to eq '123 Main'
+      expect { addr.street_address }.to raise_exception NoMethodError, /undefined method `street_address'/
     end
   end
 end

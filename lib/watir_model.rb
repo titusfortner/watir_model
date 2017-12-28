@@ -42,7 +42,7 @@ class WatirModel
       keys << symbol unless @keys.include? symbol
       aliases.each { |alias_key| self.aliases[alias_key] = symbol }
       attr_accessor symbol
-      apis[symbol] = api if api
+      apis[api] = symbol if api
       data_types[symbol] = data_type if data_type
       defaults[symbol] = block if block
     end
@@ -84,7 +84,7 @@ class WatirModel
 
     def convert(hash, *args)
       hash.deep_symbolize_keys!
-      filtered = hash.select { |k| keys.include?(k) || aliases.keys.include?(k) }
+      filtered = hash.select { |k| (keys + aliases.keys + apis.keys).include?(k) }
       model = new(filtered)
       args.each do |key|
         model.instance_eval do
@@ -135,6 +135,10 @@ class WatirModel
       hash[aliases[alias_key]] = hash.delete(alias_key)
     end
 
+    (hash.keys & apis.keys).each do |api_key|
+      hash[apis[api_key]] = hash.delete(api_key)
+    end
+
     unknown = hash.keys - keys
     if unknown.count > 0
       raise ArgumentError, "unknown keyword#{'s' if unknown.count > 1}: #{unknown.join ', '}"
@@ -177,7 +181,7 @@ class WatirModel
   def to_api
     hash = to_hash
     apis.each do |key, value|
-      hash[value]  = hash.delete(key)
+      hash[key] = hash.delete(value)
     end
     hash.to_json
   end
