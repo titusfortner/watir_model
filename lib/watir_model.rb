@@ -174,6 +174,7 @@ class WatirModel
     opt.each_with_object({}) do |key, hash|
       value = send(key)
       next if value.nil?
+      value = value.to_hash if value.is_a? WatirModel
       hash[key] = value
     end
   end

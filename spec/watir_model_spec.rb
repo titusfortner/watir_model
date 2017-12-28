@@ -212,6 +212,7 @@ describe WatirModel do
     expect(test_data[:test_value]).to be_a String
     expect(test_data).to be_a Hash
     expect(test_data[:test_hash]).to be_a Hash
+    expect(test_data[:test_model]).to be_a Hash
     expect(test_data).to eql(test_hash)
   end
 
@@ -359,7 +360,6 @@ describe WatirModel do
     key(:state) { 'TX' }
     key(:zip, api: :postal_code) { '78758' }
   end
-
 
   describe '#to_api' do
     it 'converts' do
