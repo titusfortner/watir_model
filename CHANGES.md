@@ -1,3 +1,8 @@
+### 0.4.5 (2017-12-29)
+
+* support for `:data_type` to include `Date`
+* fix bug in `#data_from_yaml` conditional
+
 ### 0.4.4 (2017-12-28)
 
 * fix bug for `#factory_file` dealing with namespaces
