@@ -54,7 +54,7 @@ class WatirModel
       value = case
               when data_type == String
                 value.to_s
-              when data_type == Time, Date, DateTime
+              when [Time, Date, DateTime].include?(data_type)
                 data_type.parse value
               when data_type == Integer
                 value.to_i
