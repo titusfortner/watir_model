@@ -1,3 +1,8 @@
+### 0.4.6 (2017-12-29)
+
+* support for `#to_json`
+* fix bug in `#convert_type` for Dates and Times
+
 ### 0.4.5 (2017-12-29)
 
 * support for `:data_type` to include `Date`
