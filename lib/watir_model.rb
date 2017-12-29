@@ -109,7 +109,7 @@ class WatirModel
     end
 
     def data_from_yaml(file, value)
-      return nil unless !file.nil? || value.is_a?(Symbol) || value.is_a?(String)
+      return nil if file.nil? || !(value.is_a?(Symbol) || value.is_a?(String))
       YAML.load_file(file)[value.to_sym]
     end
   end
