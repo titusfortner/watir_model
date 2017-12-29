@@ -177,6 +177,10 @@ class WatirModel
     end
   end
 
+  def to_json(*)
+    to_hash.to_json
+  end
+
   def to_api
     hash = to_hash
     apis.each do |key, value|
