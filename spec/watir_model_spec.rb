@@ -92,7 +92,7 @@ describe WatirModel do
 
   describe '#convert' do
     it 'creates a new model as a subset of a hash' do
-      user_data = {first: 'Peidong', last: 'Yang', foo: 'foo', bar: 'bar'}
+      user_data = {first: 'Peidong', last: 'Yang',  email: 'a@b.com', foo: 'foo', bar: 'bar'}
       user = UserModel.convert(user_data)
 
       expect(user.first).to eq 'Peidong'
@@ -101,7 +101,7 @@ describe WatirModel do
     end
 
     it 'allows additional attributes to be accessed' do
-      user_data = {first: 'Billy', last: 'Shakespere', foo: 'foo', bar: 'bar', foobar: 'foobar'}
+      user_data = {first: 'Billy', last: 'Shakespere', email: 'a@b.com', foo: 'foo', bar: 'bar', foobar: 'foobar'}
       user = UserModel.convert(user_data, :foo, :bar)
 
       expect(user.first).to eq 'Billy'
@@ -111,14 +111,14 @@ describe WatirModel do
     end
 
     it 'only adds accessors to single instance' do
-      user_data = {first: 'Billy', last: 'Shakespere', foo: 'foo', bar: 'bar'}
+      user_data = {first: 'Billy', last: 'Shakespere', email: 'a@b.com', foo: 'foo', bar: 'bar'}
       UserModel.convert(user_data, :foo, :bar)
       user = UserModel.new
       expect { user.foo }.to raise_error(NoMethodError)
     end
 
     it 'accepts keys as Strings' do
-      user_data = {'first' => 'Peidong'}
+      user_data = {'first' => 'Peidong', last: 'Shakespere', email: 'a@b.com'}
       user = UserModel.convert(user_data)
 
       expect(user.first).to eq 'Peidong'
@@ -128,6 +128,12 @@ describe WatirModel do
       addr2 = AliasAddress.convert(line1: '123 Main St')
       addr1 = AliasAddress.new(street1: '123 Main St')
       expect(addr1).to eql addr2
+    end
+
+    it 'raises exception if converting a Hash that is missing keys' do
+      user_data = {first: 'Billy', last: 'Shakespere'}
+      msg = "Can not convert Hash to Model when keys with default values are missing"
+      expect { UserModel.convert(user_data) }.to raise_exception(StandardError, msg)
     end
   end
 

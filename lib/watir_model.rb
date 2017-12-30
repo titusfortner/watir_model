@@ -30,6 +30,10 @@ class WatirModel
       @defaults ||= {}
     end
 
+    def valid_keys
+      keys + aliases.keys + apis.keys
+    end
+
     def inherited(subclass)
       subclass.keys = keys.dup
       subclass.aliases = aliases.dup
@@ -82,7 +86,10 @@ class WatirModel
 
     def convert(hash, *args)
       hash.deep_symbolize_keys!
-      filtered = hash.select { |k| (keys + aliases.keys + apis.keys).include?(k) }
+      filtered = hash.select { |k| valid_keys.include?(k) }
+      unless (defaults.keys - default_value_keys(filtered)).empty?
+        raise StandardError, "Can not convert Hash to Model when keys with default values are missing"
+      end
       model = new(filtered)
       args.each do |key|
         model.instance_eval do
@@ -94,6 +101,12 @@ class WatirModel
 
     def default_directory
       'config/data'
+    end
+
+    def default_value_keys(hash)
+      hash.keys.map do |key|
+        keys.include?(key) ? key : (aliases[key] || apis[key])
+      end
     end
 
     def method_missing(method, *args, &block)
@@ -114,7 +127,7 @@ class WatirModel
     end
   end
 
-  def initialize(hash={})
+  def initialize(hash = {})
     hash.deep_symbolize_keys!
     update(hash)
 
@@ -155,6 +168,10 @@ class WatirModel
   end
 
   def apis
+    self.class.apis
+  end
+
+  def valid_keys
     self.class.apis
   end
 
