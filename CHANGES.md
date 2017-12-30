@@ -1,3 +1,7 @@
+### 0.5.0 (2017-12-29)
+
+* prevent `#convert` when default values won't be used
+
 ### 0.4.6 (2017-12-29)
 
 * support for `#to_json`
