@@ -8,14 +8,10 @@ class WatirModel
   class << self
     include YmlReader
 
-    attr_writer :keys, :aliases, :data_types, :defaults, :apis
+    attr_writer :keys, :data_types, :defaults, :apis
 
     def keys
       @keys ||= []
-    end
-
-    def aliases
-      @aliases ||= {}
     end
 
     def data_types
@@ -31,20 +27,18 @@ class WatirModel
     end
 
     def valid_keys
-      keys + aliases.keys + apis.keys
+      keys + apis.keys
     end
 
     def inherited(subclass)
       subclass.keys = keys.dup
-      subclass.aliases = aliases.dup
       subclass.apis = apis.dup
       subclass.defaults = defaults.dup
       subclass.data_types = data_types.dup
     end
 
-    def key(symbol, data_type: nil, aliases: [], api: nil, &block)
+    def key(symbol, data_type: nil, api: nil, &block)
       keys << symbol unless @keys.include? symbol
-      aliases.each { |alias_key| self.aliases[alias_key] = symbol }
       attr_accessor symbol
       apis[api] = symbol if api
       data_types[symbol] = data_type if data_type
@@ -105,7 +99,7 @@ class WatirModel
 
     def default_value_keys(hash)
       hash.keys.map do |key|
-        keys.include?(key) ? key : (aliases[key] || apis[key])
+        keys.include?(key) ? key : apis[key]
       end
     end
 
@@ -142,10 +136,6 @@ class WatirModel
   def update(hash)
     hash ||= {}
 
-    (hash.keys & aliases.keys).each do |alias_key|
-      hash[aliases[alias_key]] = hash.delete(alias_key)
-    end
-
     (hash.keys & apis.keys).each do |api_key|
       hash[apis[api_key]] = hash.delete(api_key)
     end
@@ -163,16 +153,12 @@ class WatirModel
     self.class.keys
   end
 
-  def aliases
-    self.class.aliases
-  end
-
   def apis
     self.class.apis
   end
 
   def valid_keys
-    self.class.apis
+    self.class.valid_keys
   end
 
   def [] key

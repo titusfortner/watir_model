@@ -124,12 +124,6 @@ describe WatirModel do
       expect(user.first).to eq 'Peidong'
     end
 
-    it 'equates values from any alias' do
-      addr2 = AliasAddress.convert(line1: '123 Main St')
-      addr1 = AliasAddress.new(street1: '123 Main St')
-      expect(addr1).to eql addr2
-    end
-
     it 'raises exception if converting a Hash that is missing keys' do
       user_data = {first: 'Billy', last: 'Shakespere'}
       msg = "Can not convert Hash to Model when keys with default values are missing"
@@ -338,24 +332,6 @@ describe WatirModel do
       expect(address.city).to eql 'Anchorage'
       expect(address.state).to eql 'AK'
       expect(address.zip).to eql '99501'
-    end
-  end
-
-  class AliasAddress < WatirModel
-    key(:street1, aliases: [:line1, :street_1]) { '11800 Domain Blvd' }
-  end
-
-  describe 'Alias Keys' do
-    it 'equates values from any alias' do
-      addr2 = AliasAddress.new(line1: '11800 Domain Blvd')
-      addr1 = AliasAddress.new(street1: '11800 Domain Blvd')
-      expect(addr1).to eql addr2
-    end
-
-    it 'does not store alias key' do
-      addr = AliasAddress.new(line1: '11800 Domain Blvd')
-      expect(addr.street1).to eq '11800 Domain Blvd'
-      expect { addr.line1 }.to raise_exception NoMethodError, /undefined method `line1'/
     end
   end
 
