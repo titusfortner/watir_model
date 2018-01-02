@@ -212,7 +212,7 @@ describe WatirModel do
       key(:test_hash) { {t1: '1', t2: test_array, t3: test_model, t4: {a1: test_model}} }
     end
 
-    test_data = TestClass.new.to_hash
+    test_data = TestClass.new.to_h
 
     expect(test_data[:test_array]).to be_an Array
     expect(test_data[:test_value]).to be_a String
@@ -294,7 +294,7 @@ describe WatirModel do
     end
 
     it 'converts a hash to a Watir Model' do
-      sm = ShippingAddress.new.to_hash
+      sm = ShippingAddress.new.to_h
       te = TypeExample.new(modeling: sm)
       expect(te.modeling).to be_a WatirModel
     end

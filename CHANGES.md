@@ -1,3 +1,7 @@
+### 0.5.1 (unreleased)
+
+* deprecate `#to_hash` in favor of more correct `#to_h`
+
 ### 0.5.0 (2017-12-29)
 
 * prevent `#convert` when default values won't be used

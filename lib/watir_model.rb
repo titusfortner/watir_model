@@ -185,21 +185,26 @@ class WatirModel
   alias_method :==, :eql?
 
   def to_hash(opt = nil)
+    warn "#to_hash is deprecated, use #to_h instead"
+    to_h opt
+  end
+
+  def to_h(opt = nil)
     opt ||= keys
     opt.each_with_object({}) do |key, hash|
       value = send(key)
       next if value.nil?
-      value = value.to_hash if value.is_a? WatirModel
+      value = value.to_h if value.is_a? WatirModel
       hash[key] = value
     end
   end
 
   def to_json(*)
-    to_hash.to_json
+    to_h.to_json
   end
 
   def to_api
-    hash = to_hash
+    hash = to_h
     apis.each do |key, value|
       hash[key] = hash.delete(value)
     end
