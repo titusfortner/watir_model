@@ -1,4 +1,4 @@
-### 0.5.1 (unreleased)
+### 0.5.1 (2018-01-05)
 
 * deprecate `#to_hash` in favor of more correct `#to_h`
 * remove support for key `:aliases` 
