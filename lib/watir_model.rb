@@ -2,6 +2,7 @@ require 'active_support/hash_with_indifferent_access'
 require 'json'
 require 'date'
 require 'time'
+require 'faker'
 require 'yml_reader'
 
 class WatirModel

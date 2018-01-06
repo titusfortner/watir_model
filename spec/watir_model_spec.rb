@@ -92,7 +92,7 @@ describe WatirModel do
 
   describe '#convert' do
     it 'creates a new model as a subset of a hash' do
-      user_data = {first: 'Peidong', last: 'Yang',  email: 'a@b.com', foo: 'foo', bar: 'bar'}
+      user_data = {first: 'Peidong', last: 'Yang', email: 'a@b.com', foo: 'foo', bar: 'bar'}
       user = UserModel.convert(user_data)
 
       expect(user.first).to eq 'Peidong'
