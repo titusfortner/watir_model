@@ -1,3 +1,7 @@
+### 0.5.3 (2018-01-06)
+
+* fix default value for create method when no value in yaml 
+
 ### 0.5.2 (2018-01-06)
 
 * implement create method for ConfigModel to populate from yaml via ENV variable
