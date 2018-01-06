@@ -1,4 +1,6 @@
 require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/string'
+
 require 'json'
 require 'date'
 require 'time'
@@ -113,7 +115,7 @@ class WatirModel
     end
 
     def factory_file(type)
-      Dir.glob("#{WatirModel.yml_directory}/#{type.to_s[/[^:]*$/].downcase}.yml").first
+      Dir.glob("#{WatirModel.yml_directory}/#{type.to_s[/[^:]*$/].underscore}.yml").first
     end
 
     def data_from_yaml(file, value)

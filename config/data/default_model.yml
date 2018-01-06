@@ -1,0 +1,3 @@
+:from_yaml:
+    :default: foo
+    :secondary: bar
