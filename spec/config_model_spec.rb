@@ -30,5 +30,11 @@ describe ConfigModel do
       shipping = DefaultModel.create(secondary: 'foo')
       expect(shipping.secondary).to eq 'foo'
     end
+
+    it 'initializes with default values if no factory is found' do
+      ENV['DEFAULT_MODEL'] = ''
+      shipping = DefaultModel.create
+      expect(shipping.default).to eq 'true'
+    end
   end
 end
