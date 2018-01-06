@@ -1,7 +1,7 @@
 class ConfigModel < WatirModel
   def self.create(hash = {})
     file = factory_file(self)
-    env = ENV[self.to_s.underscore.upcase]
+    env = ENV[self.to_s[/[^:]*$/].underscore.upcase]
     data = data_from_yaml(file, env) || {}
     new(data.merge hash)
   end
