@@ -1,3 +1,7 @@
+### 0.5.4 (2018-01-06)
+
+* fix bug in create method for namespaced classes 
+
 ### 0.5.3 (2018-01-06)
 
 * fix default value for create method when no value in yaml 
