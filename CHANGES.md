@@ -1,3 +1,7 @@
+### 0.5.2 (2018-01-06)
+
+* implement create method for ConfigModel to populate from yaml via ENV variable
+
 ### 0.5.1 (2018-01-05)
 
 * deprecate `#to_hash` in favor of more correct `#to_h`
