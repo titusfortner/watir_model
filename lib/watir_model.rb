@@ -54,7 +54,7 @@ class WatirModel
       data_type = data_types[key]
       return value if data_type.nil?
       return value if data_type.is_a?(Class) && value.is_a?(data_type)
-      method = "convert_#{data_type.to_s.underscore}"
+      method = "convert_#{data_type.to_s.underscore.tr('/', '_')}"
       value = if respond_to? method
                 send(method, value)
               else
