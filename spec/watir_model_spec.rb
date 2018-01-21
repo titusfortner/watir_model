@@ -3,7 +3,7 @@ require 'spec_helper'
 describe WatirModel do
 
   class Address < WatirModel
-    key(:street1) { '11800 Domain Blvd' }
+    key(:street1, api: :street_address, data_type: String) { '11800 Domain Blvd' }
     key(:street2)
     key(:city) { 'Austin' }
     key(:state) { 'TX' }

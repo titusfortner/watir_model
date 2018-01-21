@@ -6,10 +6,12 @@ require 'date'
 require 'time'
 require 'faker'
 require 'yml_reader'
+require 'data_conversions'
 
 class WatirModel
   class << self
     include YmlReader
+    include DataConversions
 
     attr_writer :keys, :data_types, :defaults, :apis
 
@@ -52,32 +54,15 @@ class WatirModel
       data_type = data_types[key]
       return value if data_type.nil?
       return value if data_type.is_a?(Class) && value.is_a?(data_type)
-      value = case
-              when data_type == String
-                value.to_s
-              when [Time, Date, DateTime].include?(data_type)
-                data_type.parse value
-              when data_type == Integer
-                value.to_i
-              when data_type == Float
-                value.to_f
-              when data_type == :boolean
-                return value if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-                value = eval(value)
-                return value if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-                raise StandardError, "Unable to convert #{value} to TrueClass or FalseClass"
-              when data_type == Symbol
-                value.to_sym
-              when data_type == Hash
-                JSON.parse value
-              when data_type == Array
-                JSON.parse value
+      method = "convert_#{data_type.to_s.underscore}"
+      value = if respond_to? method
+                send(method, value)
               else
                 file = factory_file(data_type)
                 data = data_from_yaml(file, value) || value
                 data_type.new(data)
               end
-      return value if value.is_a?(data_type)
+      return value unless value.nil?
       raise StandardError, "Unable to convert #{value} to #{data_type}"
     end
 

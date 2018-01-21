@@ -13,6 +13,7 @@ describe ConfigModel do
 
       shipping = DefaultModel.new
       expect(shipping.default).to eq 'false'
+      ENV.delete 'DEFAULT'
     end
   end
 
