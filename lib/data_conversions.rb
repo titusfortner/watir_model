@@ -8,8 +8,8 @@ module DataConversions
     Object.const_get(__callee__.to_s.gsub('convert_to_', '').camelcase).parse value
   end
 
-  alias_method :convert_date, :convert_time
-  alias_method :convert_date_time, :convert_time
+  alias_method :convert_to_date, :convert_to_time
+  alias_method :convert_to_date_time, :convert_to_time
 
   def convert_to_integer(value)
     value.to_i
