@@ -1,3 +1,7 @@
+### 0.5.8 (2018-01-21)
+
+* Fix bug in alias methods in conversions 
+
 ### 0.5.7 (2018-01-21)
 
 * support converting to and from custom data types 
