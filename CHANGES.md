@@ -1,3 +1,7 @@
+### 0.5.6 (2018-01-21)
+
+* fix bug with conversion of namespaced classes 
+
 ### 0.5.5 (2018-01-20)
 
 * allow overriding or specifying custom conversions 
