@@ -1,3 +1,7 @@
+### 0.5.7 (2018-01-21)
+
+* support converting to and from custom data types 
+
 ### 0.5.6 (2018-01-21)
 
 * fix bug with conversion of namespaced classes 
